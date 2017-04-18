@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -165,7 +166,9 @@ public class Play implements Screen {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
             Gdx.app.debug("Temp LOG" , "X == " + x + " ; Y == " + y);
             if(x>0 && y > 0) {
-                tempLayer.getCell(x, y).getTile().setTextureRegion(region);
+                //tempLayer.getCell(x, y).getTile().setTextureRegion(region);
+                tempLayer.getCell(x,y).setTile(new StaticTiledMapTile(region));
+
             }
         }
 
