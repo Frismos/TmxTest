@@ -4,9 +4,13 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -20,6 +24,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 
 import java.util.ArrayList;
 
@@ -38,7 +44,7 @@ public class Play implements Screen {
 
     TiledMapTileLayer tempLayer;
     TiledMapTileLayer groundLayer;
-    Image mainImage;
+    SpineActor mainImage;
     TextureRegion region;
 
     @Override
@@ -51,7 +57,9 @@ public class Play implements Screen {
         layer.setY(-3170);
 
         //StretchViewport viewport = new StretchViewport(32*16,64*32);
-        stage = new Stage();
+        stage = new Stage(new ScalingViewport(Scaling.stretch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera()),
+                new PolygonSpriteBatch());
+
 
         groundLayer = (TiledMapTileLayer)map.getLayers().get(1);
 
@@ -77,12 +85,17 @@ public class Play implements Screen {
         stage.getCamera().rotate(stageMatrix);
 
 
-        Texture texture = new Texture("1.png");
+        Texture texture = new Texture("Path.png");
         region = new TextureRegion(texture);
 
 
-        mainImage = new Image(texture);
+//        mainImage = new Image(texture);
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skeleton.atlas"));
+        mainImage = new SpineActor("skeleton.json", atlas, 1);
+//        mainImage.setColor(Color.RED);
+        mainImage.setAnimation(0, "animation", true);
         stage.addActor(mainImage);
+
     }
 
     private Vector3 worldToIso(Vector3 point, int tileWidth, int tileHeight) {
@@ -145,7 +158,7 @@ public class Play implements Screen {
             }
         }
 
-        if(Gdx.input.getX() > 0 && Gdx.input.getY() > 0)
+        if(Gdx.input.isTouched(0) && Gdx.input.getX() > 0 && Gdx.input.getY() > 0)
         {
             Vector3 curpos = new Vector3(Gdx.input.getX() , Gdx.input.getY() , 0);
             camera.unproject(curpos);
